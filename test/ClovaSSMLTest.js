@@ -19,7 +19,7 @@ let milliseconds = [
   1400,
   1500
 ];
-let breakAudios = milliseconds.map(time => ({
+let silentAudios = milliseconds.map(time => ({
   time,
   url: `https;//xxx.xx/silence${time}.mp3`
 }));
@@ -27,7 +27,7 @@ let breakAudios = milliseconds.map(time => ({
 describe("ClovaSSML", () => {
   describe("#convert", () => {
     it("SimpleSpeech", function() {
-      let converter = new ClovaSSML(breakAudios, "ja");
+      let converter = new ClovaSSML({silentAudios});
       let ssml =
         '<speak>Hello! <prosody rate="120%">Clova.</prosody> xx.</speak>';
       let result = converter.convert(ssml);
@@ -38,7 +38,7 @@ describe("ClovaSSML", () => {
       result.should.eql(expected);
     });
     it("SpeechList", function() {
-      let converter = new ClovaSSML(breakAudios, "ja");
+      let converter = new ClovaSSML({silentAudios});
       let ssml =
         '<speak>Hello!<break time="1.2s" /> ' +
         '<p>My name is <prosody rate="120%">Clova.</prosody></p>' +
@@ -79,7 +79,7 @@ describe("ClovaSSML", () => {
     });
 
     it("with xml declaration", function() {
-      let converter = new ClovaSSML(breakAudios, "ja");
+      let converter = new ClovaSSML({silentAudios});
       let ssml =
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
         '<speak>Hello! <prosody rate="120%">Clova.</prosody></speak>';
@@ -91,7 +91,7 @@ describe("ClovaSSML", () => {
       result.should.eql(expected);
     });
     it("without speak tag", function() {
-      let converter = new ClovaSSML(breakAudios, "ja");
+      let converter = new ClovaSSML({silentAudios});
       let ssml = 'Hello! <prosody rate="120%">Clova.</prosody>';
       let result = converter.convert(ssml);
       let expected = {

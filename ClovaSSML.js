@@ -2,19 +2,17 @@ const parseXml = require("./parseXml");
 
 class ClovaSSML {
   /**
-   * @param {Array} breakAudios like [{time: 500, url: "http://xxx.com/500.mp3"},{time: 1000, url: "http://xxx.com/1000.mp3"},]
-   * @param {string} lang
+   * @param {object|undefined} opt
    */
-  constructor(breakAudios, lang) {
-    if (!breakAudios) {
-      breakAudios = [];
-      console.warn("break audios should be set.");
+  constructor(opt) {
+    opt = opt || {};
+    let silentAudios = opt.silentAudios || [];
+    let lang = opt.lang || 'ja';
+    if (silentAudios.length === 0) {
+      console.warn("silent audios should be set.");
     }
-    if (!lang) {
-      lang = "ja";
-    }
-    breakAudios.sort((a, b) => a.time - b.time);
-    this.breakAudios = breakAudios;
+    silentAudios.sort((a, b) => a.time - b.time);
+    this.silentAudios = silentAudios;
     this.adjustBreakTime = -200;
     this.lang = lang;
   }
@@ -65,49 +63,39 @@ class ClovaSSML {
       ) {
         speeches[speeches.length - 1].value += tag.text;
       } else {
-        speeches.push({
-          type: "PlainText",
-          lang: this.lang,
-          value: tag.text
-        });
+        speeches.push(this.getTextSpeech(tag.text));
       }
     } else if (tag.name === "audio") {
-      speeches.push({
-        type: "URL",
-        lang: "",
-        value: tag.attrs.src
-      });
+      speeches.push(this.getAudioSpeech(tag.attrs.src));
     } else if (tag.name === "break") {
-      let audio = this.getBreakAudio(tag.attrs.time);
+      let audio = this.getSilentAudio(tag.attrs.time);
       if (audio) {
-        speeches.push({
-          type: "URL",
-          lang: "",
-          value: audio.url
-        });
+        speeches.push(this.getAudioSpeech(audio.url));
       } else {
-        speeches.push({
-          type: "PlainText",
-          lang: this.lang,
-          value: ""
-        });
+        speeches.push(this.getTextSpeech());
       }
     } else if (tag.name === "p") {
-      speeches.push({
-        type: "PlainText",
-        lang: this.lang,
-        value: ""
-      });
+      speeches.push(this.getTextSpeech());
       speeches = this.addSpeeches(speeches, tag.children);
-      speeches.push({
-        type: "PlainText",
-        lang: this.lang,
-        value: ""
-      });
+      speeches.push(this.getTextSpeech());
     } else {
       speeches = this.addSpeeches(speeches, tag.children);
     }
     return speeches;
+  }
+  getTextSpeech(text) {
+    return {
+      type: "PlainText",
+      lang: this.lang,
+      value: text || ""
+    }
+  }
+  getAudioSpeech(url) {
+    return {
+      type: "URL",
+      lang: "",
+      value: url
+    }
   }
 
   addSpeeches(speeches, tags) {
@@ -119,18 +107,17 @@ class ClovaSSML {
     return speeches;
   }
 
-  getBreakAudio(str) {
+  getSilentAudio(str) {
     let ms = this.getBreakMs(str);
     ms = ms + this.adjustBreakTime;
-    if (this.breakAudios.length === 0) {
-      return null;
-    }
     let audio = null;
-    this.breakAudios.forEach(_audio => {
-      if (_audio.time <= ms) {
-        audio = _audio;
-      }
-    });
+    if (this.silentAudios.length > 0) {
+      this.silentAudios.forEach(_audio => {
+        if (_audio.time <= ms) {
+          audio = _audio;
+        }
+      });
+    }
     return audio;
   }
 
