@@ -1,84 +1,85 @@
-const parseXml = require('../parseXml');
+const parseXml = require("../parseXml");
 
 const chai = require("chai");
 describe("parseXml", () => {
-  it("normal", function () {
-    let xml = '<sample>abc<xxx a="xx"  b="yy"  ></xxx><xxx><xxx>hy<g>rr</g>u<g/>i</xxx>' +
+  it("normal", function() {
+    let xml =
+      '<sample>abc<xxx a="xx"  b="yy"  ></xxx><xxx><xxx>hy<g>rr</g>u<g/>i</xxx>' +
       '</xxx>yyyyy<ttt>s</ttt><   rrrr  c="t" /></sample>';
     let result = parseXml(xml);
     let expected = [
       {
-        "name": "sample",
-        "attrs": {},
-        "children": [
+        name: "sample",
+        attrs: {},
+        children: [
           {
-            "name": "text",
-            "text": "abc"
+            name: "text",
+            text: "abc"
           },
           {
-            "name": "xxx",
-            "attrs": {
-              "a": "xx",
-              "b": "yy"
+            name: "xxx",
+            attrs: {
+              a: "xx",
+              b: "yy"
             },
-            "children": []
+            children: []
           },
           {
-            "name": "xxx",
-            "attrs": {},
-            "children": [
+            name: "xxx",
+            attrs: {},
+            children: [
               {
-                "name": "xxx",
-                "attrs": {},
-                "children": [
+                name: "xxx",
+                attrs: {},
+                children: [
                   {
-                    "name": "text",
-                    "text": "hy"
+                    name: "text",
+                    text: "hy"
                   },
                   {
-                    "name": "g",
-                    "attrs": {},
-                    "children": [
+                    name: "g",
+                    attrs: {},
+                    children: [
                       {
-                        "name": "text",
-                        "text": "rr"
+                        name: "text",
+                        text: "rr"
                       }
                     ]
                   },
                   {
-                    "name": "text",
-                    "text": "u"
+                    name: "text",
+                    text: "u"
                   },
                   {
-                    "name": "g",
-                    "attrs": {}
+                    name: "g",
+                    attrs: {}
                   },
                   {
-                    "name": "text",
-                    "text": "i"
+                    name: "text",
+                    text: "i"
                   }
                 ]
               }
             ]
           },
           {
-            "name": "text",
-            "text": "yyyyy"
+            name: "text",
+            text: "yyyyy"
           },
           {
-            "name": "ttt",
-            "attrs": {},
-            "children": [
+            name: "ttt",
+            attrs: {},
+            children: [
               {
-                "name": "text",
-                "text": "s"
+                name: "text",
+                text: "s"
               }
             ]
           },
           {
-            "name": "rrrr",
-            "attrs": {
-              "c": "t"
+            name: "rrrr",
+            attrs: {
+              c: "t"
             }
           }
         ]
@@ -86,45 +87,46 @@ describe("parseXml", () => {
     ];
     result.should.eql(expected);
   });
-  it("with xml declaration", function () {
-    let xml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
-      '<foo>abc</foo>';
+  it("with xml declaration", function() {
+    let xml =
+      '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+      "<foo>abc</foo>";
     let result = parseXml(xml);
     let expected = [
       {
-        "name": "foo",
-        "attrs": {},
-        "children": [
+        name: "foo",
+        attrs: {},
+        children: [
           {
-            "name": "text",
-            "text": "abc"
+            name: "text",
+            text: "abc"
           }
         ]
       }
     ];
     result.should.eql(expected);
   });
-  it("without outer tag", function () {
-    let xml = 'abc<foo>gg</foo>abc';
+  it("without outer tag", function() {
+    let xml = "abc<foo>gg</foo>abc";
     let result = parseXml(xml);
     let expected = [
       {
-        "name": "text",
-        "text": "abc"
+        name: "text",
+        text: "abc"
       },
       {
-        "name": "foo",
-        "attrs": {},
-        "children": [
+        name: "foo",
+        attrs: {},
+        children: [
           {
-            "name": "text",
-            "text": "gg"
+            name: "text",
+            text: "gg"
           }
         ]
       },
       {
-        "name": "text",
-        "text": "abc"
+        name: "text",
+        text: "abc"
       }
     ];
     result.should.eql(expected);

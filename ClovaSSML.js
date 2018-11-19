@@ -46,9 +46,11 @@ class ClovaSSML {
   getSpeechInfoValues(ssml) {
     let content = parseXml(ssml);
     let speeches = this.addSpeeches([], content);
-    speeches = speeches.filter(t => !(t.type === 'PlainText' && t.value.trim() === ''));
+    speeches = speeches.filter(
+      t => !(t.type === "PlainText" && t.value.trim() === "")
+    );
     speeches.forEach(speech => {
-      if (speech.type === 'PlainText') {
+      if (speech.type === "PlainText") {
         speech.value = speech.value.trim();
       }
     });
@@ -57,7 +59,10 @@ class ClovaSSML {
 
   addSpeech(speeches, tag) {
     if (tag.name === "text") {
-      if (speeches.length > 0 && speeches[speeches.length - 1].type === 'PlainText') {
+      if (
+        speeches.length > 0 &&
+        speeches[speeches.length - 1].type === "PlainText"
+      ) {
         speeches[speeches.length - 1].value += tag.text;
       } else {
         speeches.push({

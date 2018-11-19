@@ -1,13 +1,13 @@
 const parseXml = str => {
   let result = [];
   str = removeXMLDeclaration(str);
-  let {type, tagName, attrs, text, nextStr} = getNextTag(str);
+  let { type, tagName, attrs, text, nextStr } = getNextTag(str);
   if (text) {
     result.push(textTag(text));
   }
-  if (tagName && type !== 'close') {
-    let tag = {name: tagName, attrs};
-    if (type === 'single') {
+  if (tagName && type !== "close") {
+    let tag = { name: tagName, attrs };
+    if (type === "single") {
       result.push(tag);
       result = result.concat(parseXml(nextStr));
     } else {
@@ -16,20 +16,20 @@ const parseXml = str => {
       result.push(tag);
       result = result.concat(parseXml(res.nextStr));
     }
-  } else if (type === 'close') {
+  } else if (type === "close") {
     result = result.concat(parseXml(nextStr));
   }
   return result;
 };
 // remove xml declaration like <?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 const removeXMLDeclaration = str => {
-  return str.replace(/^\s*<\?\s*xml.*?\?\s*>/,'');
+  return str.replace(/^\s*<\?\s*xml.*?\?\s*>/, "");
 };
-const  textTag = text => ({ name: "text", text });
+const textTag = text => ({ name: "text", text });
 
-const parseTagAttributes =  str => {
+const parseTagAttributes = str => {
   let attrs = {};
-  str = str.replace(/\s+/g,' ').trim();
+  str = str.replace(/\s+/g, " ").trim();
   let vals = str.split(" ");
   vals.forEach(val => {
     if (val || val.trim()) {
@@ -52,22 +52,22 @@ const parseTagAttributes =  str => {
 getTagChildren = (tag, nextStr) => {
   let tagStack = [tag.name];
   let loop = 1000;
-  let content = '';
-  while(tagStack.length > 0 && nextStr && loop > 0) {
+  let content = "";
+  while (tagStack.length > 0 && nextStr && loop > 0) {
     let res = getNextTag(nextStr);
     if (res.tagName) {
-      if (res.type === 'open') {
+      if (res.type === "open") {
         tagStack.push(res.tagName);
-      } else if (res.type === 'close') {
+      } else if (res.type === "close") {
         tagStack.pop();
       }
     }
-    content += res.content || '';
+    content += res.content || "";
     nextStr = res.nextStr;
     loop -= 1;
   }
   if (loop === 0) {
-    throw new Error('Loop error.');
+    throw new Error("Loop error.");
   }
   return { content, nextStr };
 };
@@ -82,23 +82,22 @@ const getNextTag = str => {
     if (matches && matches.length > 1) {
       let tagName = matches[1];
       let attributesStr = matches[2];
-      let type = 'open';
+      let type = "open";
       if (/^\//.test(tagName)) {
-        tagName = tagName.replace(/^\//, '');
-        type = 'close';
+        tagName = tagName.replace(/^\//, "");
+        type = "close";
       } else if (/\/$/.test(tagName) || /\/$/.test(attributesStr)) {
-        tagName = tagName.replace(/\/$/, '');
-        attributesStr = attributesStr.replace(/\/$/, '');
-        type = 'single';
+        tagName = tagName.replace(/\/$/, "");
+        attributesStr = attributesStr.replace(/\/$/, "");
+        type = "single";
       }
       let attrs = parseTagAttributes(attributesStr);
-      return {type, tagName, attrs, text, content, nextStr};
+      return { type, tagName, attrs, text, content, nextStr };
     } else {
-      throw new Error('Tag parse error.');
+      throw new Error("Tag parse error.");
     }
   }
-  return {tagName: null, text: str, content: str, nextStr: null};
-
+  return { tagName: null, text: str, content: str, nextStr: null };
 };
 
 module.exports = parseXml;
