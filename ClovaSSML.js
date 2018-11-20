@@ -3,17 +3,24 @@ const parseXml = require("./parseXml");
 class ClovaSSML {
   /**
    * @param {object|undefined} opt
+   * @param {array} opt.silentAudios like [{time: 500, url: "http://xxx.com/500.mp3"},{time: 1000, url: "http://xxx.com/1000.mp3"},]
+   * @param {string} opt.lang default: ja
+   * @param {array} opt.adjustSilentTime default: -200
    */
   constructor(opt) {
     opt = opt || {};
     let silentAudios = opt.silentAudios || [];
     let lang = opt.lang || 'ja';
+    let adjustSilentTime = opt.adjustSilentTime;
+    if (typeof adjustSilentTime === "undefined") {
+      adjustSilentTime = -200;
+    }
     if (silentAudios.length === 0) {
       console.warn("silent audios should be set.");
     }
     silentAudios.sort((a, b) => a.time - b.time);
     this.silentAudios = silentAudios;
-    this.adjustBreakTime = -200;
+    this.adjustSilentTime = adjustSilentTime;
     this.lang = lang;
   }
 
@@ -108,8 +115,8 @@ class ClovaSSML {
   }
 
   getSilentAudio(str) {
-    let ms = this.getBreakMs(str);
-    ms = ms + this.adjustBreakTime;
+    let ms = this.getSilentMs(str);
+    ms = ms + this.adjustSilentTime;
     let audio = null;
     if (this.silentAudios.length > 0) {
       this.silentAudios.forEach(_audio => {
@@ -121,7 +128,7 @@ class ClovaSSML {
     return audio;
   }
 
-  getBreakMs(str) {
+  getSilentMs(str) {
     str = str.trim();
     if (/ms$/i.test(str)) {
       return parseInt(str.replace(/ms$/, ""));
