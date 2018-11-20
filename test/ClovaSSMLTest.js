@@ -3,26 +3,11 @@ const ClovaSSML = require("../ClovaSSML");
 const chai = require("chai");
 
 let should = chai.should();
-let milliseconds = [
-  200,
-  300,
-  400,
-  500,
-  600,
-  700,
-  800,
-  900,
-  1000,
-  1100,
-  1200,
-  1300,
-  1400,
-  1500
-];
-let silentAudios = milliseconds.map(time => ({
-  time,
-  url: `https;//xxx.xx/silence${time}.mp3`
-}));
+// set silent audios infos
+const silentAudios = [];
+for(let time=100; time<=5000; time+= 100) {
+  silentAudios.push({time, url: `https;//xxx.xx/silence${time}.mp3`});
+}
 
 describe("ClovaSSML", () => {
   describe("#convert", () => {
