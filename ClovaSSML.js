@@ -30,7 +30,7 @@ class ClovaSSML {
    * @returns {object}
    */
   convert(ssml) {
-    let speeches = this.getSpeechInfoValues(ssml);
+    let speeches = this.getSpeechInfoObjects(ssml);
     let outputSpeech;
     if (speeches.length === 0) {
       throw new Error("messages must be set.");
@@ -48,7 +48,7 @@ class ClovaSSML {
     return outputSpeech;
   }
 
-  getSpeechInfoValues(ssml) {
+  getSpeechInfoObjects(ssml) {
     let content = parseXml(ssml);
     let speeches = this.addSpeeches([], content);
     speeches = speeches.filter(
