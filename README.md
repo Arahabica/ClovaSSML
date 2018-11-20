@@ -24,7 +24,7 @@ const silentAudios = [];
 for(let time=100; time<=5000; time+= 100) {
   silentAudios.push({time, url: `YOUR_AUDIO_BASE_URL/silence${time}.mp3`});
 }
-let ssml = '<speak>Hello! <break time='0,3s' /> How are you?</speak>';
+let ssml = '<speak>Hello! <break time='0.3s' /> How are you?</speak>';
 let clovaSSML = new ClovaSSML({silentAudios});
 let outputSpeech = clovaSSML.convert(ssml);
 ```
