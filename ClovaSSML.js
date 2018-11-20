@@ -56,7 +56,7 @@ class ClovaSSML {
   }
 
   addSpeech(speeches, tag) {
-    if (tag.name === "text") {
+    if (tag.name === "#text") {
       if (
         speeches.length > 0 &&
         speeches[speeches.length - 1].type === "PlainText"

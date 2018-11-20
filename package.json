@@ -14,5 +14,8 @@
     "test": "mocha"
   },
   "author": "",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "xmldom": "^0.1.27"
+  }
 }

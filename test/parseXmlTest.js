@@ -5,7 +5,7 @@ describe("parseXml", () => {
   it("normal", function() {
     let xml =
       '<sample>abc<xxx a="xx"  b="yy"  ></xxx><xxx><xxx>hy<g>rr</g>u<g/>i</xxx>' +
-      '</xxx>yyyyy<ttt>s</ttt><   rrrr  c="t" /></sample>';
+      '</xxx>yyyyy<ttt>s</ttt><rrrr  c="t" /></sample>';
     let result = parseXml(xml);
     let expected = [
       {
@@ -13,7 +13,7 @@ describe("parseXml", () => {
         attrs: {},
         children: [
           {
-            name: "text",
+            name: "#text",
             text: "abc"
           },
           {
@@ -21,8 +21,7 @@ describe("parseXml", () => {
             attrs: {
               a: "xx",
               b: "yy"
-            },
-            children: []
+            }
           },
           {
             name: "xxx",
@@ -33,7 +32,7 @@ describe("parseXml", () => {
                 attrs: {},
                 children: [
                   {
-                    name: "text",
+                    name: "#text",
                     text: "hy"
                   },
                   {
@@ -41,13 +40,13 @@ describe("parseXml", () => {
                     attrs: {},
                     children: [
                       {
-                        name: "text",
+                        name: "#text",
                         text: "rr"
                       }
                     ]
                   },
                   {
-                    name: "text",
+                    name: "#text",
                     text: "u"
                   },
                   {
@@ -55,7 +54,7 @@ describe("parseXml", () => {
                     attrs: {}
                   },
                   {
-                    name: "text",
+                    name: "#text",
                     text: "i"
                   }
                 ]
@@ -63,7 +62,7 @@ describe("parseXml", () => {
             ]
           },
           {
-            name: "text",
+            name: "#text",
             text: "yyyyy"
           },
           {
@@ -71,7 +70,7 @@ describe("parseXml", () => {
             attrs: {},
             children: [
               {
-                name: "text",
+                name: "#text",
                 text: "s"
               }
             ]
@@ -98,7 +97,7 @@ describe("parseXml", () => {
         attrs: {},
         children: [
           {
-            name: "text",
+            name: "#text",
             text: "abc"
           }
         ]
@@ -111,7 +110,7 @@ describe("parseXml", () => {
     let result = parseXml(xml);
     let expected = [
       {
-        name: "text",
+        name: "#text",
         text: "abc"
       },
       {
@@ -119,13 +118,13 @@ describe("parseXml", () => {
         attrs: {},
         children: [
           {
-            name: "text",
+            name: "#text",
             text: "gg"
           }
         ]
       },
       {
-        name: "text",
+        name: "#text",
         text: "abc"
       }
     ];
